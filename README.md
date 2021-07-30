@@ -1,2 +1,2 @@
-# teams-roulette.bot
-discord bot
+# teams-roulette-bot
+A Discord bot. 
