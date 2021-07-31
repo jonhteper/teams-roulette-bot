@@ -12,6 +12,7 @@ class Roulette {
         }
         this.result = []
     }
+    random(){ return Roulette.shuffle(this.names) }
 
     couples(){
         const r = this
@@ -19,20 +20,20 @@ class Roulette {
         r.over.len = r.len%2
 
         if(r.over.len < 2){
-            r.teams.len -= 2
+            r.teams.len -= 1
             r.over.len += 2
         }
 
         const arr = r.random()
-        r.teams.arr = arr.slice(0, arr.length-(r.over.len +1))
-        r.over.arr = arr.slice(r.teams.arr.length, arr.length-1)
+        r.teams.arr = arr.slice(0, arr.length-(r.over.len))
+        r.over.arr = arr.slice(r.teams.arr.length, arr.length)
 
         r.result = Roulette.makeTeams(r.teams.arr, r.teams.len, 2)
         r.result += Roulette.makeTeams(r.over.arr, 1, 3)
         return r.result
     }
 
-    random(){ return Roulette.shuffle(this.names) }
+
 
     customTeams(teamsLen, minTeamLen){
         const r = this
