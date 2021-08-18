@@ -41,7 +41,14 @@ class Roulette {
 
     customTeams(teamsLen, minTeamLen){
         const r = this
+
+        //This var is for team indexes. Like Team #1, Team #2. This because there are two calls to makeTeams()
+        //So the index in the second call the index will be 0 again. Somehow we will have to save the previous index.
+        //So in the next call it will be start on the lastIndex.
+
         var lastIndex = 0;
+
+        
         r.teams.len = r.len/teamsLen - ((r.len%teamsLen)/teamsLen)
         r.over.len = r.len%teamsLen
         
@@ -55,14 +62,15 @@ class Roulette {
         r.teams.arr = arr.slice(0, arr.length-(r.over.len))
         r.over.arr = arr.slice(r.teams.arr.length, arr.length)
 
+        
         r.result = Roulette.makeTeams(r.teams.arr, r.teams.len, teamsLen, r.messages, lastIndex)
         r.result += Roulette.makeTeams(r.over.arr, r.over.arr.length/minTeamLen, minTeamLen, r.messages, lastIndex)
 
         return r.result
     }
 
-    createTeams(teamsLen){
-        const r = this
+    createTeams(n){
+        return this.customTeams(n, n)
     }
 
 
@@ -82,7 +90,6 @@ class Roulette {
         }
         return arr
     }
-
 
     static makeTeams(arr, nTeams, teamsLen, messages, lastIndex) {
         let r = [], result='', Index = 0 
