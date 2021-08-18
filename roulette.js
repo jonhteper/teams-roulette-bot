@@ -1,5 +1,6 @@
 class Roulette {
-    constructor(names) {
+
+    constructor(names, messages) {
         this.names = names
         this.len = names.length
         this.teams = {
@@ -11,7 +12,10 @@ class Roulette {
             arr: []
         }
         this.result = []
+        this.messages = messages
     }
+    
+    
     random(){ return Roulette.shuffle(this.names) }
 
     couples(){
@@ -28,8 +32,8 @@ class Roulette {
         r.teams.arr = arr.slice(0, arr.length-(r.over.len))
         r.over.arr = arr.slice(r.teams.arr.length, arr.length)
 
-        r.result = Roulette.makeTeams(r.teams.arr, r.teams.len, 2)
-        r.result += Roulette.makeTeams(r.over.arr, 1, 3)
+        r.result = Roulette.makeTeams(r.teams.arr, r.teams.len, 2, r.messages)
+        r.result += Roulette.makeTeams(r.over.arr, 1, 3, r.messages)
         return r.result
     }
 
@@ -37,8 +41,10 @@ class Roulette {
 
     customTeams(teamsLen, minTeamLen){
         const r = this
+        var lastIndex = 0;
         r.teams.len = r.len/teamsLen - ((r.len%teamsLen)/teamsLen)
         r.over.len = r.len%teamsLen
+        
 
         while(r.over.len < minTeamLen){
             r.teams.len -= 1
@@ -49,11 +55,17 @@ class Roulette {
         r.teams.arr = arr.slice(0, arr.length-(r.over.len))
         r.over.arr = arr.slice(r.teams.arr.length, arr.length)
 
-        r.result = Roulette.makeTeams(r.teams.arr, r.teams.len, teamsLen)
-        r.result += Roulette.makeTeams(r.over.arr, r.over.arr.length/minTeamLen, minTeamLen)
+        r.result = Roulette.makeTeams(r.teams.arr, r.teams.len, teamsLen, r.messages, lastIndex)
+        r.result += Roulette.makeTeams(r.over.arr, r.over.arr.length/minTeamLen, minTeamLen, r.messages, lastIndex)
 
         return r.result
     }
+
+    createTeams(teamsLen){
+        const r = this
+    }
+
+
 
     threesomes(){
         return this.customTeams(3, 2)
@@ -72,15 +84,18 @@ class Roulette {
     }
 
 
-    static makeTeams(arr, nTeams, teamsLen) {
-        let r = [], result='', Index = 0
+    static makeTeams(arr, nTeams, teamsLen, messages, lastIndex) {
+        let r = [], result='', Index = 0 
+        
         for (let i = 0; i < nTeams; i++) {
             let v = arr.slice(Index, teamsLen+Index)
             r.push(v)
             Index += teamsLen
         }
 
-        r.map(v => result += `${v.join("─")}\n\n` )
+        var teamCounter = 1;
+
+        r.map((v, index) => {result += messages.teamMessage + teamCounter + "**\n\t- " + `${v.join("\n\t- ")}\n`; teamCounter++} )
 
         return result
     }
